@@ -1,0 +1,88 @@
+body {
+    max-width: 960px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 18px;
+    margin: auto;
+}
+
+h1 {
+    text-transform: uppercase;
+    text-decoration: underline;
+    font-size: 20px;
+    margin-bottom: 0px;
+}
+
+ul.single {
+    list-style: none;
+    padding-left: 0px;
+    margin-top: 0px;
+}
+
+ul.mul {
+    margin-top: 0px;
+}
+
+.section {
+    padding-bottom: 5px;
+}
+
+.section .item {
+    margin-bottom: 10px;
+}
+
+
+.section .item .next {
+    padding-left: 4px;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.inline {
+    display: inline-block;
+}
+
+.name {
+    font-size: 30px;
+}
+
+.right {
+    float:right;
+}
+
+.border-bottom {
+    border-bottom: 1px solid;
+}
+
+.border-top {
+    border-top: 1px solid;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.row {
+    display: flex;
+}
+  
+.column-30 {
+    flex: 30%;
+}
+
+.column-70 {
+    flex: 70%;
+}
+
+.tright {
+    text-align: right;
+}
+
+
+
+
