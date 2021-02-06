@@ -5,7 +5,7 @@ init = {
     'Content-Type': 'application/json'
   }
 }
-const response = fetch("https://api.lhtran.com/www_resume/get_view_count", init)
+const response = fetch("https://api.lhtran.com/wwwresume/get_view_count", init)
   .then(r => r.json());
 window.onload = async () => {
   let data = await response;
