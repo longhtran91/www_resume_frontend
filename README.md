@@ -9,6 +9,6 @@ This project contains source code and supporting files for a front end of person
 - .github/workflows/workflow.yml - Github workflow for CI/CD
 
 Architecture:
-![Preview1](./Architecture diagram.jpeg)
+![Architecture Diagram](https://i.imgur.com/uXJ6Qrx.jpg)
 
 Visit https://github.com/longhtran91/www_resume_backend for the Back End
