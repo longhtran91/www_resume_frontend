@@ -23,7 +23,6 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
     - name: Deploy S3, Cloudfront and R53
-      uses: youyo/aws-sam-action/python3.8@master
       run: |
         aws cloudformation deploy --template-file template.yaml --s3-bucket aws-cli-wwwresume-fe-template --s3-prefix wwwResumeAppFE --stack-name wwwResumeAppFE --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset
     - name: Sync S3 bucket
