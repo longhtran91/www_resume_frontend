@@ -1,0 +1,89 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  www_resume_frontend
+
+  Sample SAM Template for www_resume_frontend
+
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  wwwResumeBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption: 
+        ServerSideEncryptionConfiguration: 
+            - ServerSideEncryptionByDefault:
+                SSEAlgorithm: AES256
+      BucketName: '{{resolve:ssm:/www_resume/domain/url:1}}'
+      PublicAccessBlockConfiguration: 
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+
+  CFOAIwwwResume:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties: 
+      CloudFrontOriginAccessIdentityConfig: 
+        Comment: '{{resolve:ssm:/www_resume/domain/url:1}}'
+
+  wwwResumeCF:
+    Type: AWS::CloudFront::Distribution
+    Properties: 
+      DistributionConfig: 
+        Aliases: 
+          - '{{resolve:ssm:/www_resume/domain/url:1}}'
+        DefaultCacheBehavior: 
+          AllowedMethods: ['GET', 'HEAD']
+          CachedMethods: ['GET', 'HEAD']
+          CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6'
+          Compress: False
+          OriginRequestPolicyId: 'acba4595-bd28-49b8-b9fe-13317c0390fa'
+          SmoothStreaming: False
+          TargetOriginId: 'S3-{{resolve:ssm:/www_resume/domain/url:1}}'
+          ViewerProtocolPolicy: 'redirect-to-https'
+        DefaultRootObject: 'index.html'
+        Enabled: True
+        HttpVersion: 'http2'
+        IPV6Enabled: True
+        Origins:
+          - DomainName: !Sub '{{resolve:ssm:/www_resume/domain/url:1}}.s3.${AWS::Region}.amazonaws.com'
+            Id: 'S3-{{resolve:ssm:/www_resume/domain/url:1}}'
+            S3OriginConfig: 
+              OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CFOAIwwwResume}'
+        PriceClass: 'PriceClass_100'
+        ViewerCertificate: 
+          AcmCertificateArn: '{{resolve:ssm:/config/main_cert_arn:1}}'
+          MinimumProtocolVersion: 'TLSv1.2_2019'
+          SslSupportMethod: 'sni-only'
+
+  wwwResumeBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties: 
+      Bucket: '{{resolve:ssm:/www_resume/domain/url:1}}'
+      PolicyDocument:
+        Statement:
+          - Action:
+              - 's3:GetObject'
+            Effect: 'Allow'
+            Resource: 'arn:aws:s3:::{{resolve:ssm:/www_resume/domain/url:1}}/*'
+            Principal:
+              AWS: !Sub "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CFOAIwwwResume}"
+
+  wwwResumeR53Record:
+    Type: AWS::Route53::RecordSet
+    Properties: 
+      AliasTarget: 
+        DNSName: !GetAtt wwwResumeCF.DomainName
+        HostedZoneId: 'Z2FDTNDATAQYW2'
+      HostedZoneName: '{{resolve:ssm:/config/hostedzone:1}}' 
+      Name: '{{resolve:ssm:/www_resume/domain/url:1}}'
+      Type: 'A'
+
+Outputs:
+  wwwResumeApi:
+    Description: "API Gateway endpoint URL for prod stage for wwwResume backend"
+    Value: 'https://{{resolve:ssm:/www_resume/domain/api_domain_name:2}}/{{resolve:ssm:/www_resume/domain/api_base_path:1}}/{{resolve:ssm:/www_resume/domain/get_view_path:1}}'
