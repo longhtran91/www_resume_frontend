@@ -3,7 +3,7 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   www_resume_frontend
 
-  Sample SAM Template for www_resume_frontend
+  CloudFormation Template for www_resume_frontend
 
 Globals:
   Function:
@@ -84,6 +84,6 @@ Resources:
       Type: 'A'
 
 Outputs:
-  wwwResumeApi:
-    Description: "API Gateway endpoint URL for prod stage for wwwResume backend"
-    Value: 'https://{{resolve:ssm:/www_resume/domain/api_domain_name:2}}/{{resolve:ssm:/www_resume/domain/api_base_path:1}}/{{resolve:ssm:/www_resume/domain/get_view_path:1}}'
+  wwwResumeURL:
+    Description: "Resume Website URL"
+    Value: 'https://{{resolve:ssm:/www_resume/domain/url:1}}'
